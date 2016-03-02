@@ -1,0 +1,113 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"> 
+
+<h:head>
+	<link rel="stylesheet" type="text.css" href="resources/css/estilo.css"/>
+	<script src="resources/script/funcoesGerais.js"> </script>		
+</h:head> 
+<body>
+
+	<header>
+		<img class="alignCenter" src="resources/imagens/logo.jpg"/>			
+	</header>	
+
+	<p:breadCrumb>
+	    <p:menuitem value="Página Inicial" url="#" />
+	    <p:menuitem value="Criar Documento" url="#" />
+	    <p:menuitem value="Recebimento" url="#" />
+	    <p:menuitem value="Cadastros gerais" url="#"/>
+	</p:breadCrumb>
+	
+	<h:form id="formPrincipal">		
+
+		<p:dataTable id="listaDocumentos" value="#{documentoMB.objetos}" var="listaDocumentos" >
+			<p:column style="width:50px;  text-align:center;">
+				<f:facet name="header">ID</f:facet> 
+				#{listaDocumentos.id}		
+			</p:column>
+			<p:column> 
+			 	<f:facet name="header">Descrição</f:facet> 
+				#{listaDocumentos.descricao}		
+			</p:column>
+			<p:column style="width:200px;  text-align:center;"> 
+			 	<f:facet name="header">Setor Atual</f:facet> 
+				#{listaDocumentos.setor.descricao}		
+			</p:column>		
+			<p:column style="width:390px;  text-align:center;"> 
+		 		<f:facet name="header">Ações</f:facet>
+		 	 
+				<p:commandButton value="Editar" icon="ui-icon-clipboard" >
+					<f:setPropertyActionListener value="#{listaDocumentos}" target="#{documentoMB.objeto}" />
+					<f:ajax execute="@this" render="@form" />			
+				</p:commandButton>
+					
+				<p:commandButton value="Encaminhar" icon="ui-icon-arrowstop-1-e" oncomplete="PF('dlg2').show();" update="pnl">
+				    		<f:setPropertyActionListener value="#{listaDocumentos}" target="#{documentoMB.objeto}" />
+				</p:commandButton>	    		
+							
+					<p:dialog header="Selecione o setor destino" widgetVar="dlg2" minHeight="40">
+						<h:panelGrid columns="3" id="pnl">
+						
+							<p:selectOneMenu value="#{documentoMB.objeto.setor}" converter="converterSetor">
+								<f:selectItems value="#{documentoMB.listaSetor}" var="setor" itemValue="#{setor}" itemLabel="#{setor.descricao}"  />	
+								<f:attribute name="lista" value="#{documentoMB.listaSetor}"/>
+							</p:selectOneMenu>				    				
+
+							<h:panelGroup>
+								<p:commandButton action="#{documentoMB.realizaTrocaSetor()}" value="Encaminhar" update="listaDocumentos" process="pnl"/>
+							</h:panelGroup>
+							    						
+    						<p:commandButton value="Cancelar" oncomplete="PF('dlg2').hide();"/>
+    					</h:panelGrid>
+					</p:dialog>
+				
+				<p:commandButton value="Deletar" icon="ui-icon-close" onclick="PF('dlg1').show();"/>
+					<p:dialog header="Deseja realmente excluir o registro?" widgetVar="dlg1" minHeight="40">
+    					<p:commandButton action="#{documentoMB.excluiObjeto()}" value="Sim" update="listaDocumentos">
+    						<f:setPropertyActionListener value="#{listaDocumentos}" target="#{documentoMB.objeto}" />
+							<f:ajax execute="@this" render="@form"/>    					
+    					</p:commandButton>
+    					<p:commandButton value="Não" oncomplete="PF('dlg1').hide();"/>
+					</p:dialog>			
+				
+			</p:column>			
+		</p:dataTable>
+	
+	
+	
+		<h:panelGrid columns="2">
+			<p:outputLabel value="Descrição:" />
+			<h:panelGroup>
+				<p:inputText value="#{documentoMB.objeto.descricao}" id="descricao"/>	
+			</h:panelGroup>			
+			
+			<p:outputLabel value="Setor:" />
+			<h:panelGroup>
+				<p:selectOneMenu value="#{documentoMB.objeto.setor}" converter="converterSetor">
+					<f:selectItems value="#{documentoMB.listaSetor}" var="setor" itemValue="#{setor}" itemLabel="#{setor.descricao}"  />	
+					<f:attribute name="lista" value="#{documentoMB.listaSetor}"/>
+				</p:selectOneMenu>							
+				
+			</h:panelGroup>
+			
+			<h:panelGroup>
+				<p:commandButton value="Salvar" icon="ui-icon-disk" action="#{documentoMB.salvarObjeto()}" update="@form"/>
+			</h:panelGroup>			
+			<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />							
+		</h:panelGrid>	
+							  	
+	</h:form>
+	
+	<footer>
+		<p>
+			Copyright 2015 GERAÇÃO TEC - JavaWeb | Todos os direitos reservados
+		</p>	
+	</footer>
+	
+
+</body> 
+</html>
