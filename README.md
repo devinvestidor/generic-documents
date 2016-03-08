@@ -17,11 +17,6 @@ Este projeto foi desenvolvido no curso Java Web - Senai. O mesmo teve foco princ
 ### Observações
 * A importação das dependências está sendo feita de forma incorreta;
 * A estrutura das pastas está desalinhada;
-* Está sendo importado uma série de .jars sem necessidade;
+* Retirar todos os .jars e separar em um projeto; ou utilizar algum gerenciador de dependências;
+* Retirar a pasta build com o gitignore;
 * O **importante** é as classes genéricas que foram desenvolvidas.
-
-
-### Próximo passo?
-* Corrigir as dependências;
-* Corrigir a estrutura de pastas;
-* Retirar os .jars que não são necessários.
